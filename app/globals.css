@@ -1,13 +1,33 @@
 @import "tailwindcss";
+@source "../node_modules/streamdown/dist/*.js";
+@import "katex/dist/katex.min.css";
 
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --muted: #f4f4f5;
+  --muted-foreground: #71717a;
+  --secondary: #f4f4f5;
+  --secondary-foreground: #18181b;
+  --accent: #f4f4f5;
+  --accent-foreground: #18181b;
+  --destructive: #ef4444;
+  --destructive-foreground: #ffffff;
+  --border: #e4e4e7;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
@@ -16,6 +36,15 @@
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
+    --muted: #27272a;
+    --muted-foreground: #a1a1aa;
+    --secondary: #27272a;
+    --secondary-foreground: #fafafa;
+    --accent: #27272a;
+    --accent-foreground: #fafafa;
+    --destructive: #dc2626;
+    --destructive-foreground: #ffffff;
+    --border: #3f3f46;
   }
 }
 
@@ -23,4 +52,85 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Streamdown math rendering */
+.katex-display {
+  margin: 1.5em 0;
+  padding: 1em;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+/* Streamdown code blocks - add distinct background */
+[data-streamdown] pre {
+  margin: 1em 0;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  background-color: rgba(0, 0, 0, 0.03);
+}
+
+@media (prefers-color-scheme: dark) {
+  [data-streamdown] pre {
+    border-color: rgba(255, 255, 255, 0.1);
+    background-color: rgba(255, 255, 255, 0.05);
+  }
+}
+
+/* Streamdown inline code */
+[data-streamdown] code:not(pre code) {
+  padding: 0.125rem 0.375rem;
+  border-radius: 0.25rem;
+  background-color: rgba(0, 0, 0, 0.06);
+  font-size: 0.875em;
+}
+
+@media (prefers-color-scheme: dark) {
+  [data-streamdown] code:not(pre code) {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+}
+
+/* Tables */
+[data-streamdown] table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5em 0;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+[data-streamdown] th,
+[data-streamdown] td {
+  padding: 0.75rem 1rem;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+[data-streamdown] th {
+  background-color: rgba(0, 0, 0, 0.03);
+  font-weight: 600;
+  text-align: left;
+}
+
+[data-streamdown] tr:nth-child(even) {
+  background-color: rgba(0, 0, 0, 0.015);
+}
+
+@media (prefers-color-scheme: dark) {
+  [data-streamdown] table {
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+  
+  [data-streamdown] th,
+  [data-streamdown] td {
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+  
+  [data-streamdown] th {
+    background-color: rgba(255, 255, 255, 0.05);
+  }
+  
+  [data-streamdown] tr:nth-child(even) {
+    background-color: rgba(255, 255, 255, 0.025);
+  }
 }
