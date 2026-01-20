@@ -157,7 +157,9 @@ export async function POST(request: Request) {
       });
 
       console.log("streamText called successfully, returning response");
-      return result.toUIMessageStreamResponse();
+      return result.toUIMessageStreamResponse({
+        sendReasoning: true,
+      });
     } catch (error) {
       console.error("AI SDK error (inner catch):", error);
       const errorMessage =

@@ -28,7 +28,11 @@ import {
   PromptInputSubmit,
   type PromptInputMessage,
 } from "@/components/ai-elements/prompt-input";
-import { Loader } from "@/components/ai-elements/loader";
+import {
+  Reasoning,
+  ReasoningContent,
+  ReasoningTrigger,
+} from "@/components/ai-elements/reasoning";
 import { CopyIcon, RefreshCwIcon, CheckIcon } from "lucide-react";
 
 type DbMessage = {
@@ -228,7 +232,7 @@ export default function ChatPage() {
         </div>
         <button
           onClick={handleClear}
-          className="rounded-lg border px-3 py-1.5 text-sm font-medium transition-colors hover:bg-accent"
+          className="cursor-pointer rounded-lg border px-3 py-1.5 text-sm font-medium transition-colors hover:bg-accent disabled:cursor-not-allowed"
           type="button"
           disabled={status === "submitted" || status === "streaming"}
         >
@@ -251,10 +255,14 @@ export default function ChatPage() {
               const isLastMessage = messageIndex === messages.length - 1;
 
               return message.parts.map((part, i) => {
+                const isCopied = copiedMessageId === message.id;
+                const partKey = `${message.id}-${i}`;
+                const isStreamingLastMessage = status === "streaming" && isLastMessage && i === message.parts.length - 1;
+                const isGLMModel = modelId === "zai/glm-4.5v";
+
                 if (part.type === "text") {
-                  const isCopied = copiedMessageId === message.id;
                   return (
-                    <div key={`${message.id}-${i}`}>
+                    <div key={partKey}>
                       <Message from={message.role}>
                         <MessageContent>
                           {message.role === "assistant" && !isError ? (
@@ -292,12 +300,36 @@ export default function ChatPage() {
                       )}
                     </div>
                   );
+                } else if (part.type === "reasoning" && isGLMModel) {
+                  return (
+                    <div key={partKey}>
+                      <Message from={message.role}>
+                        <MessageContent>
+                          <Reasoning
+                            className="w-full"
+                            isStreaming={isStreamingLastMessage}
+                          >
+                            <ReasoningTrigger />
+                            <ReasoningContent>{part.text}</ReasoningContent>
+                          </Reasoning>
+                        </MessageContent>
+                      </Message>
+                    </div>
+                  );
                 }
                 return null;
               });
             })
           )}
-          {status === "submitted" && <Loader />}
+          {status === "submitted" && (
+            <Message from="assistant">
+              <MessageContent>
+                <div className="inline-flex items-center">
+                  <span className="inline-block size-2 rounded-full bg-current animate-pulse" />
+                </div>
+              </MessageContent>
+            </Message>
+          )}
         </ConversationContent>
         <ConversationScrollButton />
       </Conversation>
